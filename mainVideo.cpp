@@ -1,9 +1,11 @@
 #include "chromakey.hpp"
-#include <opencv2/core.hpp>
+
 #include <iostream>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv/highgui.h>
-#include <opencv/cv.hpp>
+
+#include <opencv/cv.h>
+#include <opencv2/videoio.hpp>
+#include <opencv2/core/core.hpp>
+#include "opencv2/opencv.hpp"
 
 void usage(const char* argv)
 {
@@ -12,8 +14,9 @@ void usage(const char* argv)
 
 int main(int argc, char* argv[] )
 {
-
-    cv::VideoCapture cap(0); // open the default camera
+    // open the default camera
+    cv::VideoCapture cap;
+    cap.open(0);
     if(!cap.isOpened())
     {
         // check if we succeeded
@@ -25,11 +28,16 @@ int main(int argc, char* argv[] )
     const std::string OUTPUT_IMG = "mask image";
     const std::string FINAL_IMG = "final image";
 
+    int delay = 10;
+
     cv::namedWindow(FINAL_IMG,1);
-    for(;;)
+    while(true)
     {
         cv::Mat frame;
-        cap >> frame; // get a new frame from camera
+        // get a new frame from camera
+        cap >> frame;
+        if(frame.empty())
+            break;
 
         cv::Mat outMask;
         cv::Mat outImage;
@@ -39,7 +47,17 @@ int main(int argc, char* argv[] )
         outImage = applyTransparencyMask(outImage, outMask);
 
         cv::imshow(FINAL_IMG, outImage);
-        if(cv::waitKey(10) >= 0) break;
+        if( cv::waitKey(delay) == 27 )
+            break;
+        const char key = (char) cv::waitKey(delay);
+        // stop capturing by pressing ESC
+        if(key == 27)
+            break;
+        if(key == 'l' || key == 'L')
+            delay = 10;
+        // delay = 0 will wait for a key to be pressed
+        if(key == 'd' || key == 'D')
+            delay = 0;
     }
     // the camera will be deinitialized automatically in VideoCapture destructor
     return EXIT_SUCCESS;
