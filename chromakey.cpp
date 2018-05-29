@@ -61,6 +61,31 @@ private:
     cv::Mat& mask;
 };
 
+
+struct AlphaBlending
+{
+    AlphaBlending(const cv::Mat &foreground, const cv::Mat &background, const cv::Mat &alpha)
+            : _foreground(foreground),
+              _background(background),
+              _alpha(alpha) { }
+
+    void operator ()(Pixel3 &pixel, const int * position) const
+    {
+        const Pixel3 &pxFore = *_foreground.ptr<Pixel3>(position[0], position[1]);
+        const Pixel3 &pxBack = *_background.ptr<Pixel3>(position[0], position[1]);
+        const Pixel &pxAlpha = *_alpha.ptr<Pixel>(position[0], position[1]);
+
+        pixel.x = static_cast<uint8_t>(pxFore.x * pxAlpha / 255.f + (1.f - pxAlpha / 255.f) * pxBack.x);
+        pixel.y = static_cast<uint8_t>(pxFore.y * pxAlpha / 255.f + (1.f - pxAlpha / 255.f) * pxBack.y);
+        pixel.z = static_cast<uint8_t>(pxFore.z * pxAlpha / 255.f + (1.f - pxAlpha / 255.f) * pxBack.z);
+    }
+
+private:
+    const cv::Mat& _foreground;
+    const cv::Mat& _background;
+    const cv::Mat& _alpha;
+};
+
 void greenToTransparency(const cv::Mat& imageIn, const cv::Mat& hsv, cv::Mat& imageMask)
 {
     imageMask = cv::Mat(imageIn.rows, imageIn.cols, CV_8UC1, cv::Scalar(255));
@@ -126,5 +151,9 @@ void computeChromaMask(const cv::Mat &bgrImg, cv::Mat& outImg, cv::Mat &outMask)
 }
 
 
-
-
+cv::Mat alphaBlending(const cv::Mat& foreground, const cv::Mat& background, const cv::Mat& alpha)
+{
+    cv::Mat blended = foreground.clone();
+    blended.forEach<Pixel3>(AlphaBlending(foreground, background, alpha));
+    return blended;
+}
