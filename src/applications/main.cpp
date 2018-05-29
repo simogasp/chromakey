@@ -32,15 +32,15 @@ int main(int argc, char* argv[] )
     const std::string FINAL_IMG = "final image";
     const std::string BLENDED_IMG = "blended image";
 
-    cvNamedWindow(ORIGINAL_IMG.c_str());
+    cvNamedWindow(ORIGINAL_IMG.c_str(), cv::WINDOW_NORMAL);
     cv::imshow(ORIGINAL_IMG, rgbImg);
     cv::waitKey(-1);
 
-    cvNamedWindow(OUTPUT_IMG.c_str());
+    cvNamedWindow(OUTPUT_IMG.c_str(), cv::WINDOW_NORMAL);
     cv::imshow(OUTPUT_IMG, outMask);
     cv::waitKey(-1);
 
-    cvNamedWindow(FINAL_IMG.c_str());
+    cvNamedWindow(FINAL_IMG.c_str(), cv::WINDOW_NORMAL);
     cv::imshow(FINAL_IMG, transparent);
     cv::waitKey(-1);
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[] )
 
     cv::Mat blended = alphaBlending(outImage, background, outMask);
 
-    cvNamedWindow(BLENDED_IMG.c_str());
+    cvNamedWindow(BLENDED_IMG.c_str(), cv::WINDOW_NORMAL);
     cv::imshow(BLENDED_IMG, blended);
     cv::waitKey(-1);
 
