@@ -36,8 +36,9 @@ configure_package_config_file(
 )
 
 add_subdirectory(chromakey)
-add_subdirectory(applications)
-
+if(BUILD_APPS)
+    add_subdirectory(applications)
+endif()
 
 
 
