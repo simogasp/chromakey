@@ -1,4 +1,4 @@
-#include "chromakey.hpp"
+#include "../chromakey/chromakey.hpp"
 
 #include <iostream>
 
@@ -16,7 +16,7 @@ int main(int argc, char* argv[] )
 {
     // open the default camera
     cv::VideoCapture cap;
-    cap.open(0);
+    cap.open(1);
     if(!cap.isOpened())
     {
         // check if we succeeded
