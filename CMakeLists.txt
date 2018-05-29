@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.3)
 
-project(Chromakey VERSION 0.1 LANGUAGES CXX)
+project(chromakey VERSION 0.1 LANGUAGES CXX)
 
 find_package(OpenCV 3.0 REQUIRED core videoio imgproc imgcodecs highgui)
 
