@@ -6,31 +6,115 @@ using Pixel3 = cv::Point3_<uint8_t>;
 
 struct GreenFilter
 {
-    explicit GreenFilter(const cv::Mat &hsv) : hsv(hsv)  { }
+    struct Parameters
+    {
+    public:
+        Parameters() = default;
+        Parameters(Pixel hMax, Pixel hMin, float sThreshold, float vThreshold)
+                : _hMax(hMax),
+                  _hMin(hMin),
+                  _sThreshold(sThreshold),
+                  _vThreshold(vThreshold) {}
+        /**
+         * The max angle in deg for the Hue value
+         */
+        Pixel _hMax{130};
+        /**
+         * The min angle in deg for the Hue value
+         */
+        Pixel _hMin{60};
+        /**
+         * The threshold (min value in [0, 1]) for the saturation
+         */
+        float _sThreshold{0.4f};
+        /**
+         * The threshold (min value in [0, 1]) for the value
+         */
+        float _vThreshold{0.3f};
+    };
+
+    explicit GreenFilter(const cv::Mat &hsv)
+            : _hsv(hsv) { }
+
+    GreenFilter(const cv::Mat &hsv, const Parameters& param)
+            : _hsv(hsv),
+              _param(param) { }
 
     void operator ()(Pixel &pixel, const int * position) const
     {
-        const Pixel3& pxHSV = *hsv.ptr<Pixel3>(position[0], position[1]);
-        if (pxHSV.x >= 60/2 && pxHSV.x <= 130/2 &&
-            pxHSV.y >= 0.4*255 &&
-            pxHSV.z >= 0.3*255)
+        const Pixel3& pxHSV = *_hsv.ptr<Pixel3>(position[0], position[1]);
+        // divide Hue by 2 because opencv stores halved values
+        if (pxHSV.x >= _param._hMin/2 && pxHSV.x <= _param._hMax/2 &&
+            pxHSV.y >= _param._vThreshold*255 &&
+            pxHSV.z >= _param._sThreshold*255)
         {
             pixel = 0;
         }
     }
 
 private:
-    const cv::Mat& hsv;
+    const cv::Mat& _hsv;
+    const Parameters _param{ };
 };
 
 struct ReduceGreenSpill
 {
-    explicit ReduceGreenSpill(const cv::Mat &hsv, cv::Mat &mask) : hsv(hsv), mask(mask) { }
+    struct Parameters
+    {
+    public:
+        Parameters() = default;
+
+        Parameters(Pixel hMax,
+                   Pixel hMin,
+                   float sThreshold,
+                   float vThreshold,
+                   float spillThreshold,
+                   float coeff1,
+                   float coeff2)
+                : _hMax(hMax),
+                  _hMin(hMin),
+                  _sThreshold(sThreshold),
+                  _vThreshold(vThreshold),
+                  _spillThreshold(spillThreshold),
+                  _multCoeff1(coeff1),
+                  _multCoeff2(coeff2) {}
+        /**
+         * The max angle in deg for the Hue value
+         */
+        Pixel _hMax{130};
+        /**
+         * The min angle in deg for the Hue value
+         */
+        Pixel _hMin{60};
+        /**
+         * The threshold (min value in [0, 1]) for the saturation
+         */
+        float _sThreshold{0.15f};
+        /**
+         * The threshold (min value in [0, 1]) for the value
+         */
+        float _vThreshold{0.15f};
+
+        float _spillThreshold{1.5f};
+
+        float _multCoeff1{1.4f};
+
+        float _multCoeff2{1.2f};
+    };
+
+    ReduceGreenSpill(const cv::Mat &hsv, cv::Mat &mask) : _hsv(hsv), _mask(mask) { }
+
+    ReduceGreenSpill(const cv::Mat &hsv, cv::Mat &mask, const Parameters& param)
+            : _hsv(hsv),
+              _mask(mask),
+              _param(param) { }
 
     void operator ()(Pixel3 &pixel, const int * position) const
     {
-        const Pixel3& pxHSV = *hsv.ptr<Pixel3>(position[0], position[1]);
-        if (pxHSV.x >= 60/2 && pxHSV.x <= 130/2 &&
+        const Pixel3& pxHSV = *_hsv.ptr<Pixel3>(position[0], position[1]);
+
+        // divide Hue by 2 because opencv stores halved values
+        if (pxHSV.x >= _param._hMin/2 && pxHSV.x <= _param._hMax/2 &&
             pxHSV.y >= 0.15*255 &&
             pxHSV.z >= 0.15*255)
         {
@@ -38,27 +122,28 @@ struct ReduceGreenSpill
             const auto r = pixel.z;
             const auto g = pixel.y;
             const auto b = pixel.x;
-            Pixel& pxMask = *mask.ptr<Pixel>(position[0], position[1]);
+            Pixel& pxMask = *_mask.ptr<Pixel>(position[0], position[1]);
             pxMask = 0;
 
-            if (((r * b) != 0 )&& (((float)g * g) / (r * b) > 1.5))
+            if (((r * b) != 0 )&& (((float)g * g) / (r * b) > _param._spillThreshold))
             {
-                pixel.z = static_cast<uint8_t>(r * 1.4f);
-//                pixel.y = static_cast<uint8_t>(r * 1.4f);
-                pixel.x = static_cast<uint8_t>(b * 1.4f);
+                pixel.z = static_cast<uint8_t>(r * _param._multCoeff1);
+//                pixel.y = static_cast<uint8_t>(r * _param._multCoeff1);
+                pixel.x = static_cast<uint8_t>(b * _param._multCoeff1);
             }
             else
             {
-                pixel.z = static_cast<uint8_t>(r * 1.2f);
-//                pixel.y = static_cast<uint8_t>(r * 1.4f);
-                pixel.x = static_cast<uint8_t>(b * 1.2f);
+                pixel.z = static_cast<uint8_t>(r * _param._multCoeff2);
+//                pixel.y = static_cast<uint8_t>(r * _param._multCoeff2);
+                pixel.x = static_cast<uint8_t>(b * _param._multCoeff2);
             }
         }
     }
 
 private:
-    const cv::Mat& hsv;
-    cv::Mat& mask;
+    const cv::Mat& _hsv;
+    cv::Mat& _mask;
+    Parameters _param{ };
 };
 
 
