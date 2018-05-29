@@ -228,7 +228,8 @@ void computeChromaMask(const cv::Mat &bgrImg, cv::Mat& outImg, cv::Mat &outMask)
     greenToTransparency(bgrImg, hsv, outMask);
 
     // reduce remaining green pixels
-    reduceGreenSpill(bgrImg, hsv, outImg, outMask);
+    cv::Mat tmp;
+    reduceGreenSpill(bgrImg, hsv, outImg, tmp);
 
     // add blur
     outMask = applyGaussianFilter(outMask, 1);
