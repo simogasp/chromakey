@@ -1,12 +1,15 @@
 ####
 # Installation
 
+# include standard install folders
+include(GNUInstallDirs)
+
 # Layout. This works for all platforms:
 #   * <prefix>/lib/cmake/<PROJECT-NAME>
 #   * <prefix>/lib/
 #   * <prefix>/include/
 set(config_install_dir "lib/cmake/${PROJECT_NAME}")
-set(include_install_dir "include")
+set(include_install_dir "${CMAKE_INSTALL_INCLUDEDIR}")
 
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 

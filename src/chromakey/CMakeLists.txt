@@ -12,10 +12,10 @@ set_target_properties(chromakey PROPERTIES VERSION ${PROJECT_VERSION})
 install(
         TARGETS chromakey
         EXPORT "${targets_export_name}"
-        LIBRARY DESTINATION "lib"
-        ARCHIVE DESTINATION "lib"
-        RUNTIME DESTINATION "bin"
-        INCLUDES DESTINATION "${include_install_dir}"
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # Headers:
