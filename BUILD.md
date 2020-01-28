@@ -14,6 +14,10 @@ cmake .. -DOpenCV_DIR:PATH=/path/to/share/OpenCV/
 make -j8
 ```
 
+### Building options
+
+* `BUILD_APPS` (default: `ON`) enable/disable building the sample applications.
+
 ## Using the library as a third party
 
 If you want to use the library as a third party you can install it somewhere, say `INSTALL_PATH`.
