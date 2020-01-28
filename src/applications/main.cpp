@@ -15,6 +15,7 @@ int main(int argc, char* argv[] )
     if(argc <= 2 || argc > 3)
     {
         usage(argv[0]);
+        return EXIT_FAILURE;
     }
 
     // load image
