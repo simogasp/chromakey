@@ -43,4 +43,4 @@ where:
 
 * `videoFile` can be any video file
 
-* `cameraIndex` is an integer usually in `[0-1]` to select the camera to use
+* `cameraIndex` is an integer usually in `[0-9]` to select the camera to use
