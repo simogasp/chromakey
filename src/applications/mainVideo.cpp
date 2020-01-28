@@ -7,23 +7,54 @@
 #include <opencv2/core/core.hpp>
 #include "opencv2/opencv.hpp"
 
+/**
+ * @brief Check if a string is a positive integer
+ * @param[in] s the input string
+ * @return true if the string is a positive integer, false otherwise
+ */
+bool isPositiveInteger(const std::string& s)
+{
+    return !s.empty() &&
+            std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+}
+
 void usage(const char* argv)
 {
-    std::cout << "Usage:\n " << argv << " [<background>] " << "\n";
+    std::cout << "Usage:\n " << argv << " <videofile or cameraIndex> [<background>] " << "\n";
 }
 
 int main(int argc, char* argv[] )
 {
 
-    if(argc > 2)
+    if(argc != 2 && argc != 3)
     {
       usage(argv[0]);
       return EXIT_FAILURE;
     }
 
-    // open the default camera
+    const auto inputFeed = std::string(argv[1]);
+    const bool isVideo = isPositiveInteger(inputFeed);
+
+    const std::string backgroundFile = (argc == 3) ? std::string(argv[2]) : "";
+
+
     cv::VideoCapture cap;
-    cap.open(1);
+
+    if(isVideo)
+    {
+        // open the camera at given index
+        const int deviceNumber = std::stoi(inputFeed);
+        std::cout << "Opening camera device " << deviceNumber << std::endl;
+        cap.open(deviceNumber);
+    }
+    else
+    {
+        // open the video file
+        std::cout << "Opening video file " << inputFeed << std::endl;
+        cap.open(inputFeed);
+    }
+
+
     if(!cap.isOpened())
     {
         // check if we succeeded
@@ -31,11 +62,7 @@ int main(int argc, char* argv[] )
         return EXIT_FAILURE;
     }
 
-    bool withBackground = false;
-    if(argc == 2)
-    {
-        withBackground = true;
-    }
+    const bool withBackground = (argc == 3);
 
     cv::Mat background;
 
@@ -57,7 +84,8 @@ int main(int argc, char* argv[] )
 
         if(withBackground && background.empty())
         {
-            background = cv::imread(std::string(argv[1]), cv::IMREAD_COLOR);
+            std::cout << "reading background file "<< backgroundFile << std::endl;
+            background = cv::imread(backgroundFile, cv::IMREAD_COLOR);
 
             // resize if the background has not the same size
             if(background.rows != frame.rows && background.cols != frame.cols)
@@ -94,6 +122,7 @@ int main(int argc, char* argv[] )
         if(key == 'd' || key == 'D')
             delay = 0;
     }
+
     // the camera will be deinitialized automatically in VideoCapture destructor
     return EXIT_SUCCESS;
 }
