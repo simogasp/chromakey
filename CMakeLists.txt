@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1.3)
 project(chromakey VERSION 0.1 LANGUAGES CXX)
 
 option(BUILD_APPS "Build sample applications" ON)
+option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
 find_package(OpenCV 3.0 REQUIRED core videoio imgproc imgcodecs highgui)
 
