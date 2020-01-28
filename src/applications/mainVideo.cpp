@@ -9,11 +9,18 @@
 
 void usage(const char* argv)
 {
-    std::cout << "Usage:\n " << argv[0] << " <filename> [<background>] " << "\n";
+    std::cout << "Usage:\n " << argv << " [<background>] " << "\n";
 }
 
 int main(int argc, char* argv[] )
 {
+
+    if(argc > 2)
+    {
+      usage(argv[0]);
+      return EXIT_FAILURE;
+    }
+
     // open the default camera
     cv::VideoCapture cap;
     cap.open(1);
