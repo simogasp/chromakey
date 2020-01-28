@@ -6,8 +6,8 @@ target_link_libraries(processVideo PUBLIC chromakey ${OpenCV_LIBS})
 
 install(TARGETS processImage processVideo
         EXPORT "${targets_export_name}"
-        LIBRARY DESTINATION "lib"
-        ARCHIVE DESTINATION "lib"
-        RUNTIME DESTINATION "bin"
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         INCLUDES DESTINATION "${include_install_dir}"
 )
