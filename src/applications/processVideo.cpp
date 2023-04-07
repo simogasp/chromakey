@@ -1,10 +1,10 @@
-#include "../chromakey/chromakey.hpp"
+#include <chromakey/chromakey.hpp>
 
 #include <iostream>
 
 #include <opencv2/videoio.hpp>
 #include <opencv2/core/core.hpp>
-#include "opencv2/opencv.hpp"
+#include <opencv2/opencv.hpp>
 
 /**
  * @brief Check if a string is a positive integer
