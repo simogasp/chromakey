@@ -112,6 +112,15 @@ jobs:
         config: [ Debug, Release ]
     steps:
     - uses: actions/checkout@v2
+
+    - name: Restore Homebrew dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/Library/Caches/Homebrew
+        key: ${{ runner.os }}-brew-${{ hashFiles('.github/workflows/brew-dependencies.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-brew-
+
     - name: Install dependencies
       run: |
         # Install Homebrew
