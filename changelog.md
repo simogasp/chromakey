@@ -9,5 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Deprecated
+
+
+## [v0.1.0] - 2023-04-08
+
+### Added
+
 - added first version of the chromakey library
 - added sample applications (`processImage` and `processVideo`)
