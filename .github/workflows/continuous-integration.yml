@@ -116,7 +116,9 @@ jobs:
     - name: Restore Homebrew dependencies
       uses: actions/cache@v2
       with:
-        path: ~/Library/Caches/Homebrew
+        path: |
+          ~/Library/Caches/Homebrew/
+          ~/Library/Caches/Homebrew/downloads/
         key: ${{ runner.os }}-brew-${{ hashFiles('.github/workflows/brew-dependencies.txt') }}
         restore-keys: |
           ${{ runner.os }}-brew-
@@ -127,6 +129,7 @@ jobs:
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         # Install CMake and OpenGL dependencies
         export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK="ON"
+        export HOMEBREW_NO_AUTO_UPDATE=1 
         brew install cmake opencv
     - name: Build
       run: |
