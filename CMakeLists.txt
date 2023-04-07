@@ -1,11 +1,21 @@
-cmake_minimum_required(VERSION 3.1.3)
+cmake_minimum_required(VERSION 3.10)
 
 project(chromakey VERSION 0.1 LANGUAGES CXX)
 
 option(BUILD_APPS "Build sample applications" ON)
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
-find_package(OpenCV 3.0 REQUIRED core videoio imgproc imgcodecs highgui)
+if(BUILD_SHARED_LIBS)
+    if(WIN32)
+        # export all symbols on a windows build of dynamic libs
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS  ON)
+    endif()
+endif()
+
+find_package(OpenCV REQUIRED core videoio imgproc imgcodecs highgui)
+if(OpenCV_VERSION VERSION_LESS "3.0")
+    message(FATAL_ERROR "OpenCV version 3.0 or higher is required")
+endif()
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
