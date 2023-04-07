@@ -1,9 +1,9 @@
-#include "../chromakey/chromakey.hpp"
-#include <opencv2/core.hpp>
+#include <chromakey/chromakey.hpp>
 #include <iostream>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv/highgui.h>
-#include <opencv/cv.hpp>
+#include <opencv2/imgproc.hpp>
 
 void usage(const char* argv)
 {
@@ -33,15 +33,15 @@ int main(int argc, char* argv[] )
     const std::string FINAL_IMG = "final image";
     const std::string BLENDED_IMG = "blended image";
 
-    cvNamedWindow(ORIGINAL_IMG.c_str(), cv::WINDOW_NORMAL);
+    cv::namedWindow(ORIGINAL_IMG, cv::WINDOW_NORMAL);
     cv::imshow(ORIGINAL_IMG, rgbImg);
     cv::waitKey(-1);
 
-    cvNamedWindow(OUTPUT_IMG.c_str(), cv::WINDOW_NORMAL);
+    cv::namedWindow(OUTPUT_IMG, cv::WINDOW_NORMAL);
     cv::imshow(OUTPUT_IMG, outMask);
     cv::waitKey(-1);
 
-    cvNamedWindow(FINAL_IMG.c_str(), cv::WINDOW_NORMAL);
+    cv::namedWindow(FINAL_IMG, cv::WINDOW_NORMAL);
     cv::imshow(FINAL_IMG, transparent);
     cv::waitKey(-1);
 
@@ -64,7 +64,7 @@ int main(int argc, char* argv[] )
 
     cv::Mat blended = alphaBlending(outImage, background, outMask);
 
-    cvNamedWindow(BLENDED_IMG.c_str(), cv::WINDOW_NORMAL);
+    cv::namedWindow(BLENDED_IMG, cv::WINDOW_NORMAL);
     cv::imshow(BLENDED_IMG, blended);
     cv::waitKey(-1);
 

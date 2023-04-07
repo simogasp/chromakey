@@ -5,7 +5,10 @@ project(chromakey VERSION 0.1 LANGUAGES CXX)
 option(BUILD_APPS "Build sample applications" ON)
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
-find_package(OpenCV 3.0 REQUIRED core videoio imgproc imgcodecs highgui)
+find_package(OpenCV REQUIRED core videoio imgproc imgcodecs highgui)
+if(OpenCV_VERSION VERSION_LESS "3.0")
+    message(FATAL_ERROR "OpenCV version 3.0 or higher is required")
+endif()
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

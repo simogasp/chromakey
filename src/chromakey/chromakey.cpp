@@ -222,7 +222,7 @@ void computeChromaMask(const cv::Mat &bgrImg, cv::Mat& outImg, cv::Mat &outMask)
 {
     // create the hsv
     cv::Mat hsv;
-    cv::cvtColor(bgrImg, hsv, CV_BGR2HSV);
+    cv::cvtColor(bgrImg, hsv, cv::ColorConversionCodes::COLOR_BGR2HSV);
 
     // determine the transparency mask
     greenToTransparency(bgrImg, hsv, outMask);
