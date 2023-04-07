@@ -105,24 +105,26 @@ jobs:
 #        useVcpkgToolchainFile: true
 #        buildWithCMake: true
 
-# glm on homebrew is broken when loading the cmake
-#  build_macos:
-#    runs-on: macos-latest
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Install dependencies
-#      run: |
-#        # Install Homebrew
-#        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-#        # Install CMake and OpenGL dependencies
-#        export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK="ON"
-#        brew install cmake freeglut glm glew boost
-#    - name: Build
-#      run: |
-#        mkdir build
-#        cd build
-#        cmake .. -DCMAKE_BUILD_TYPE=Release
-#        cmake --build .
+  build_macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        config: [ Debug, Release ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        # Install Homebrew
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        # Install CMake and OpenGL dependencies
+        export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK="ON"
+        brew install cmake opencv
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DBUILD_APPS:BOOL=ON -DBUILD_SHARED_LIBS:BOOL=ON
+        cmake --build .
 #    - name: Test
 #      run: |
 #        cd build
