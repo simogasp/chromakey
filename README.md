@@ -1,5 +1,4 @@
-Chromakey
-=========
+# Chromakey
 
 A simple library for chromakeying.
 It contains an implementation of the keying algorithm of the [Marvin Project](http://marvinproject.sourceforge.net/en/examples/chromaKey.html).
