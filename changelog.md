@@ -17,7 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
-
 ## [v0.1.0] - 2023-04-08
 
 ### Added
