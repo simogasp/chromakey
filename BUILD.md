@@ -29,6 +29,7 @@ make install
 ```
 
 In order to include the library in your cmake project just add the dependency
+
 ```cmake
 # Find the package from the chromakeyConfig.cmake
 # in <prefix>/lib/cmake/chromakey/. Under the namespace chromakey::
@@ -43,6 +44,7 @@ target_link_libraries(chromatest PUBLIC chromakey::chromakey)
 ```
 
 Then, in order to build just pass the location of `chromakeyConfig.cmake` from the cmake command line:
+
 ```bash
 cmake .. -Dchromakey_DIR:PATH=INSTALL_PATH/lib/cmake/chromakey
 ```
