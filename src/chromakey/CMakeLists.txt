@@ -5,7 +5,7 @@ target_include_directories(chromakey
         PUBLIC
         $<BUILD_INTERFACE:${LIBRARY_INCLUDE_DIR}>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>
-        ${OpenCV_INCLUDE_DIRS})
+        )
 target_link_libraries(chromakey PUBLIC ${OpenCV_LIBS})
 
 set_target_properties(chromakey PROPERTIES DEBUG_POSTFIX "d")
