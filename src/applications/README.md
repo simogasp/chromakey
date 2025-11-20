@@ -12,7 +12,8 @@ It shows the computed mask image and the final blending with a given background 
 processImage <image> [<background image>]
 ```
 
-For example calling:
+For example, calling:
+
 ```bash
 processImage data/testData/ck4.jpg data/testData/background.jpg
 ```
