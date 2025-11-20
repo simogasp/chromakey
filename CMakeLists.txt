@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(chromakey VERSION 0.1 LANGUAGES CXX)
+project(chromakey VERSION 0.1.0 LANGUAGES CXX)
 
 option(BUILD_APPS "Build sample applications" ON)
 option(BUILD_SHARED_LIBS "Build shared libs" ON)
