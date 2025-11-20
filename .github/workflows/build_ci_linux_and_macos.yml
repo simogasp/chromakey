@@ -33,12 +33,25 @@ jobs:
           packages: libopencv-dev
           version: 1.0
 
+    # for some reason after the cache is restored, the packages are not fully installed
+    - name: Install Linux dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install libopencv-dev
+
     - name: Install macOS dependencies with caching
       uses: tecolicom/actions-use-homebrew-tools@v1
       if: runner.os == 'macOS'
       with:
           # put your list of homebrew packages here for the dependencies you need
           tools: opencv cmake
+
+    # for some reason after the cache is restored, cmake is not properly installed
+    - name: Install macOS dependencies
+      if: runner.os == 'macOS'
+      run: |
+        brew reinstall cmake
 
     - name: Build (Release)
       uses: lukka/run-cmake@v10
